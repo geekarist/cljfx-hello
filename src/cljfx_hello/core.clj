@@ -1,10 +1,10 @@
 (ns cljfx-hello.core
-  (:require [cljfx.api :as cljfx]
+  (:require [cljfx.api :as fx]
             [clojure.core.cache :as cache])
   (:gen-class))
 
 (def context
-  (atom (cljfx/create-context
+  (atom (fx/create-context
          {}
          #(cache/lru-cache-factory % :threshold 4096))))
 
@@ -18,6 +18,17 @@
   (println "Handling arg:" arg)
   (println "Event:" event)
   (println "Context:" context))
+
+(defn- effect1! [arg1]
+  (println "Applying effect 1 on" arg1))
+
+(defn- effect2! [arg2]
+  (println "Applying effect 2 on" arg2))
+
+(def actual-event-handler
+  (-> event-handler
+      (fx/wrap-effects {:eff/effect1 effect1!
+                        :eff/effect2 effect2!})))
 
 (defn root-view [arg]
   (println "Rendering:" arg)
@@ -33,6 +44,6 @@
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (def app
-  (cljfx/create-app context
-                    :event-handler event-handler
-                    :desc-fn root-view))
+  (fx/create-app context
+                 :event-handler actual-event-handler
+                 :desc-fn root-view))
