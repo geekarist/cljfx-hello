@@ -10,10 +10,15 @@
 
 (defmulti event-handler :event/type)
 
-(defmethod event-handler :evt/button-clicked
+(defmethod event-handler :evt/button1-clicked
   [args]
   (println "Button clicked with args:" args)
   {:eff/effect1 "?"})
+
+(defmethod event-handler :evt/button2-clicked
+  [args]
+  (println "Button clicked with args:" args)
+  {:eff/effect2 "?"})
 
 (defmethod event-handler :default [{:keys [fx/event fx/context] :as arg}]
   (println "Handling arg:" arg)
@@ -40,8 +45,11 @@
                   :children [{:fx/type :text
                               :text "Hello 🙂"}
                              {:fx/type :button
-                              :text "Click me!"
-                              :on-action {:event/type :evt/button-clicked}}]}}})
+                              :text "Click me (1)!"
+                              :on-action {:event/type :evt/button1-clicked}}
+                             {:fx/type :button
+                              :text "Click me (2)!"
+                              :on-action {:event/type :evt/button2-clicked}}]}}})
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (def app
