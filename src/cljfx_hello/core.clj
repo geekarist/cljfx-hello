@@ -8,9 +8,16 @@
          {}
          #(cache/lru-cache-factory % :threshold 4096))))
 
-(defn event-handler [{:keys [fx/event fx/context] :as _arg-map}]
-  (println "Handling event:" event)
-  {:context context})
+(defmulti event-handler :event/type)
+
+(defmethod event-handler :evt/button-clicked
+  [args]
+  (println "Button clicked with args:" args))
+
+(defmethod event-handler :default [{:keys [fx/event fx/context] :as arg}]
+  (println "Handling arg:" arg)
+  (println "Event:" event)
+  (println "Context:" context))
 
 (defn root-view [arg]
   (println "Rendering:" arg)
@@ -29,5 +36,3 @@
   (cljfx/create-app context
                     :event-handler event-handler
                     :desc-fn root-view))
-(comment
-  (-main))
