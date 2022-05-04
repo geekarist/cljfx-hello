@@ -12,18 +12,19 @@
 
 (defmethod event-handler :evt/button-clicked
   [args]
-  (println "Button clicked with args:" args))
+  (println "Button clicked with args:" args)
+  {:eff/effect1 "?"})
 
 (defmethod event-handler :default [{:keys [fx/event fx/context] :as arg}]
   (println "Handling arg:" arg)
   (println "Event:" event)
   (println "Context:" context))
 
-(defn- effect1! [arg1]
-  (println "Applying effect 1 on" arg1))
+(defn- effect1! [arg _dispatch!]
+  (println "Applying effect 1 on" arg))
 
-(defn- effect2! [arg2]
-  (println "Applying effect 2 on" arg2))
+(defn- effect2! [arg _dispatch!]
+  (println "Applying effect 2 on" arg))
 
 (def actual-event-handler
   (-> event-handler
